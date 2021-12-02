@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { getSession, useSession } from "next-auth/client";
 import { useRouter } from "next/router";
+import { coolGray } from "tailwindcss/colors";
 const GestionarCaso = () => {
   const [CasosRegistrados, setCasosRegistrados] = useState();
   const [casosRegistroFiltrados, setCasosRegistroFiltrados] = useState("");
@@ -11,6 +12,7 @@ const GestionarCaso = () => {
   const { register, handleSubmit } = useForm();
   const [casoSeleccionado, setCasoSeleccion] = useState("");
   const [cedulaSeleccionada, setcedulaSeleccionada] = useState("");
+  const [ultimoEstado, setUltimoEstado] = useState("");
   const [session] = useSession();
   const router = useRouter();
   const getCasosRegistrados = (data, e) => {
@@ -39,6 +41,14 @@ const GestionarCaso = () => {
         if (response.status == 200) {
           //   alert("Registro de caso cargado");
           setCasoSeleccion(response.data.response);
+          
+          if (response.data.response.length > 0) {
+            setUltimoEstado(
+              response.data.response[response.data.response.length - 1].estado
+            );
+          } else {
+            setUltimoEstado("");
+          }
         } else {
           alert("Problemas al ingresar los datos, intente nuevamente");
         }
@@ -108,6 +118,15 @@ const GestionarCaso = () => {
         if (response.status == 200) {
           alert("Estado actualizado correctamente");
           getCasoSeleccionado(cedulaSeleccionada);
+          console.log(response.data.response);
+          console.log(response.data.response.length);
+          if (response.data.response.length > 0) {
+            setUltimoEstado(
+              response.data.response[response.data.response.length - 1].estado
+            );
+          } else {
+            setUltimoEstado("");
+          }
         } else {
           alert("Problemas al ingresar los datos, intente nuevamente");
         }
@@ -116,7 +135,9 @@ const GestionarCaso = () => {
         console.log(e);
       });
   };
+
   const [rol, setRol] = useState("");
+
   useEffect(() => {
     if (session !== undefined && session !== null) {
       setRol(session.user.name);
@@ -125,6 +146,7 @@ const GestionarCaso = () => {
       router.push("/");
     }
   }, [session]);
+
   return (
     <div class="flex flex-col">
       {rol === "ayudante" ? (
@@ -156,9 +178,6 @@ const GestionarCaso = () => {
                         id="grid-state"
                         onChange={getTipoBusqueda}
                       >
-                        <option selected disabled>
-                          Tipo de busqueda
-                        </option>
                         <option value="1">Codigo caso</option>
                         <option value="2">Nombre</option>
                         <option value="3">Cedula</option>
@@ -284,45 +303,51 @@ const GestionarCaso = () => {
                   />
                 </div>
                 <div class="w-full md:w-1/2 px-3">
-                  <div class="relative">
-                    <select
-                      class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                      id="grid-state"
-                      {...register("estado")}
-                    >
-                      <option selected disabled>
-                        Actualizar Estado
-                      </option>
-                      <option value="En Tratamiento Casa">
-                        En Tratamiento Casa
-                      </option>
-                      <option value="En Tratamiento Hospital">
-                        En Tratamiento Hospital
-                      </option>
-                      <option value="En UCI">En UCI</option>
-                      <option value="Curado">Curado</option>
-                      <option value="Muerte">Muerte</option>
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                      <svg
-                        class="fill-current h-4 w-4"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
+                  {ultimoEstado === "Muerte" ? (
+                    <></>
+                  ) : (
+                    <div class="relative">
+                      {}
+                      <select
+                        class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                        id="grid-state"
+                        {...register("estado")}
                       >
-                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                      </svg>
+                        <option value="En Tratamiento Casa">
+                          En Tratamiento Casa
+                        </option>
+                        <option value="En Tratamiento Hospital">
+                          En Tratamiento Hospital
+                        </option>
+                        <option value="En UCI">En UCI</option>
+                        <option value="Curado">Curado</option>
+                        <option value="Muerte">Muerte</option>
+                      </select>
+                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <svg
+                          class="fill-current h-4 w-4"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                        </svg>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
 
               <div class="flex  items-center justify-end">
-                <button
-                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  type="submit"
-                >
-                  Actualizar Estado
-                </button>
+                {ultimoEstado === "Muerte" ? (
+                  <></>
+                ) : (
+                  <button
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit"
+                  >
+                    Actualizar Estado
+                  </button>
+                )}
               </div>
             </form>
 

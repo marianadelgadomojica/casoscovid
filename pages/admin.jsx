@@ -23,7 +23,9 @@ const admin = () => {
         console.log(e);
       });
   };
+
   const [rol, setRol] = useState("");
+
   useEffect(() => {
     if (session !== undefined && session !== null) {
       setRol(session.user.name);

@@ -148,9 +148,6 @@ const Busqueda = () => {
                         id="grid-state"
                         onChange={getTipoBusqueda}
                       >
-                        <option selected disabled>
-                          Tipo de busqueda
-                        </option>
                         <option value="1">Codigo caso</option>
                         <option value="2">Nombre</option>
                         <option value="3">Cedula</option>

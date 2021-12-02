@@ -30,9 +30,9 @@ const MapaGeneral = () => {
       .get("/api/getCasos")
       .then((response) => {
         if (response.status == 200) {
-          setCasosRegistrados(response.data.DatosCasosRegistrados);
+          setCasosRegistrados(response.data.general);
         } else {
-          alert("Problemas al ingresar los datos, intente nuevamente");
+          alert("Problemas al obtener los datos, intente nuevamente");
         }
       })
       .catch((e) => {
@@ -51,13 +51,12 @@ const MapaGeneral = () => {
             parseFloat(caso.latitud_residencia),
             parseFloat(caso.longitud_residencia),
           ],
+          color: caso.color,
         };
       });
       console.log(ubicacion);
       setCoordenadas(ubicacion);
     }
-
-    // setCoordenadas(ubicacion);
   }, [CasosRegistrados]);
 
   return (

@@ -28,7 +28,7 @@ const MapaGeneralContainer = ({ coordenadas }) => {
               key={key}
               center={coordenada.residencia}
               radius={8}
-              color="green"
+              color={coordenada.color}
             />
           ))}
       </MapContainer>

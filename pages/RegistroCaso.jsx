@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import Geocode from "react-geocode";
 Geocode.setLanguage("en");
 
-Geocode.setApiKey("");
+Geocode.setApiKey("AIzaSyDKCRIGA2eSIe7ttHfvjDp_HzKWPb3s2BI");
 Geocode.setRegion("es");
 
 Geocode.setLocationType("ROOFTOP");
